@@ -1,4 +1,4 @@
-# Greenbone GVM core 
+<!-- # Greenbone GVM core 
 
 Automated scan engine with Greenbone (formerly OpenVAS), Faraday and docker.
 
@@ -143,3 +143,4 @@ Feeds update is quite slow, so it will take significantly more time.
 - Mike Splain for creating the original OpenVAS docker image
 - ICTU team for creating the base automation script for OpenVAS
 - Eugene Merlinsky for adjusting the project to work with Greenbone 20.8.0
+--!>

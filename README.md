@@ -1,27 +1,37 @@
-# OpenVAS Docker Lite [![License](https://img.shields.io/github/license/TheDoctor0/openvas-docker-lite)](https://github.com/TheDoctor0/openvas-docker-lite/blob/master/LICENSE) [![Build Status](https://github.com/thedoctor0/openvas-docker-lite/actions/workflows/main.yml/badge.svg)](https://github.com/TheDoctor0/openvas-docker-lite/actions) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TheDoctor0/openvas-docker-lite/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TheDoctor0/openvas-docker-lite/?branch=master) [![Docker Pulls](https://img.shields.io/docker/pulls/thedoctor0/openvas-docker-lite.svg)](https://hub.docker.com/r/thedoctor0/openvas-docker-lite)
+# Greenbone GVM core 
 
-Docker container with automated OpenVAS 20.8.0 (GVMD 20.8.0) based on the Debian 10 image.
+Automated scan engine with Greenbone (formerly OpenVAS), Faraday and docker.
 
-It contains custom automation script that allows to scan selected targets and generate a report with one command.
+Components for working : 
 
-This is a lite version and it does not include Greenbone Security Assistant - web app for managing OpenVAS.
+- Faraday-server
+- faraday-cli
+- docker image of GVM core (with no webUI)
+- bash script 
 
-Previous version with OpenVAS 10 is available [here](https://github.com/TheDoctor0/openvas-docker-lite/tree/10).
+## Steps
 
-Oldest container based on Ubuntu with OpenVAS 9 is available [here](https://github.com/TheDoctor0/openvas-docker-lite/tree/9).
+### 1. Install Faraday
 
-## Usage
+Faraday is a wonderful IPE (Integrated Penetration-Test Environnement) wich can parse and visaulize Grennbone's results in a beautiful dashboard.
+Let's install it following infobytes's steps on [Infobyte repository](https://github.com/infobyte/faraday)
+Don't forget to install [farady-cli](https://github.com/infobyte/faraday-cli)
 
-### 1. Pull image:
+### 2. Pull image:
 
 ```
-docker pull thedoctor0/openvas-docker-lite
+docker pull kptainflintt/gvm-core
 ```
+
+### 3. Download script
+
+
+## Usage of docker image (Thanks to thedoctor0)
 
 ### 2. Scan and save report:
 
 ```
-docker run --rm -v $(pwd):/reports/:rw thedoctor0/openvas-docker-lite python3 -u scan.py <target> [options]
+docker run --rm -v $(pwd):/reports/:rw kptainflintt/gvm-core python3 -u scan.py <target> [options]
 ```
 
 This will start up the container and update the NVTs cache - it can take some time, so be patient.

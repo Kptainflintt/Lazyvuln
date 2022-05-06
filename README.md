@@ -26,10 +26,12 @@ docker pull kptainflintt/gvm-core
 
 ### 3. Download script
 
+This script is not mandatory, but can automate scan with upload to Faraday-server.
 
-## Usage of docker image (Thanks to thedoctor0)
 
-### 2. Scan and save report:
+## Usage of docker image to run one-shot scan (Thanks to thedoctor0, copied from his repo)
+
+### Scan and save report:
 
 ```
 docker run --rm -v $(pwd):/reports/:rw kptainflintt/gvm-core python3 -u scan.py <target> [options]

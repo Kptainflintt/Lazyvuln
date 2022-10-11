@@ -1,12 +1,11 @@
 FROM kptainflintt/gvm-core
 FROM debian:bullseye
 
-ENV GVM_LIBS_VERSION='v21.4.4' \
-    GVMD_VERSION='v21.4.5' \
-    OPENVAS_VERSION='v21.4.4' \
-    OPENVAS_SMB_VERSION='v21.4.0' \
-    OSPD_OPENVAS_VERSION='v21.4.4' \
-    OSPD_VERSION='v21.4.4' \
+ENV GVM_LIBS_VERSION='v22.4.0' \
+    GVMD_VERSION='v22.4.0' \
+    OPENVAS_VERSION='v22.4.0' \
+    OPENVAS_SMB_VERSION='v22.4.0' \
+    OSPD_OPENVAS_VERSION='v22.4.2' \
     SRC_PATH='/src' \
     DEBIAN_FRONTEND=noninteractive \
     TERM=dumb

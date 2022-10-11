@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "Determining subnet..."
+ip_addr=$(/sbin/ifconfig ens192 | grep "inet " | awk '{print $2}')
+ip_subnet=$(echo $ip_addr | cut -d'.' -f1,2,3)
+ip_subnet+=".0/24"
+echo "Define targets..."
+targets=$(nmap -n -sn $ip_subnet  -oG - | awk '/Up$/{print $2}' | paste -sd ",")
+echo "Run vulnerability scan..."
+docker run --rm -v $(pwd):/reports/:rw kptainflintt/gvm-core python3 -u scan.py $targets --update -o scan_$(date -I).xml -f XML -t "Consider Alive"
+faraday-cli auth -f http://localhost:5985 -u faraday -p Fireport && faraday-cli workspace create scan_$(date -I) && faraday-cli tool report ./scan_$(date -I).xml

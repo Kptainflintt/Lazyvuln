@@ -1,67 +1,131 @@
 FROM kptainflintt/gvm-core
 FROM debian:bullseye
 
-ENV GVM_LIBS_VERSION='v22.4.0' \
-    GVMD_VERSION='v22.4.0' \
-    OPENVAS_VERSION='v22.4.0' \
-    OPENVAS_SMB_VERSION='v22.4.0' \
-    OSPD_OPENVAS_VERSION='v22.4.2' \
+ENV GVM_VERSION=22.4.0 \
+    GVM_LIBS_VERSION=22.4.0 \
+    GVMD_VERSION=22.4.0 \
+    PG_GVM_VERSION=22.4.0 \
+    OPENVAS_SMB_VERSION=22.4.0 \
+	OPENVAS_SCANNER_VERSION=22.4.0 \
+	OSPD_OPENVAS_VERSION=22.4.2 \
+	NOTUS_VERSION=22.4.1 \
     SRC_PATH='/src' \
+	PATH=$PATH:/usr/local/sbin \
+	INSTALL_PREFIX=/usr/local \
     DEBIAN_FRONTEND=noninteractive \
     TERM=dumb
 
-RUN apt-get update && apt-get install -y --no-install-recommends apt-utils build-essential && \
-    apt-get update && apt-get install gcc g++ make bison flex libksba-dev \
-    curl redis libpcap-dev cmake git pkg-config libglib2.0-dev libgpgme-dev \
-    nmap libgnutls28-dev uuid-dev libssh-gcrypt-dev libldap2-dev gnutls-bin \
-    libmicrohttpd-dev libhiredis-dev zlib1g-dev libxml2-dev libnet-dev libradcli-dev \
-    clang-format libldap2-dev doxygen gcc-mingw-w64 xml-twig-tools libical-dev perl-base \
-    heimdal-dev libpopt-dev libunistring-dev graphviz libsnmp-dev python3-setuptools \
-    python3-paramiko python3-lxml python3-defusedxml python3-dev gettext python3-polib \
-    xmltoman python3-pip texlive-fonts-recommended \
-    texlive-latex-extra --no-install-recommends xsltproc sudo vim rsync -y && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install --no-install-recommends --assume-yes \
+    build-essential \
+    curl \
+    cmake \
+    pkg-config \
+    python3 \
+    python3-pip \
+    gnupg \
+	texlive-latex-extra \
+    texlive-fonts-recommended \
+    xmlstarlet \
+    zip \
+    rpm \
+    fakeroot \
+    dpkg \
+    nsis \
+    gnupg \
+    gpgsm \
+    wget \
+    sshpass \
+    openssh-client \
+    socat \
+    snmp \
+    python3 \
+    smbclient \
+    python3-lxml \
+    gnutls-bin \
+    xml-twig-tools \
+	redis-server \
+	mosquitto
 	
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" >     /etc/apt/sources.list.d/pgdg.list && \
-    curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc > /dev/null && \
-    apt update && apt install postgresql-11 postgresql-contrib-11 postgresql-server-dev-11 -y
+RUN apt install -y \
+    libglib2.0-dev \
+    libgpgme-dev \
+    libgnutls28-dev \
+    uuid-dev \
+    libssh-gcrypt-dev \
+    libhiredis-dev \
+    libxml2-dev \
+    libpcap-dev \
+    libnet1-dev \
+    libpaho-mqtt-dev \
+	libldap2-dev \
+    libradcli-dev \
+	libpq-dev \
+	postgresql-server-dev-13 \
+	libical-dev \
+    xsltproc \
+    rsync \
+    libbsd-dev \
+    gcc-mingw-w64 \
+	libpopt-dev \
+    libunistring-dev \
+    heimdal-dev \
+    perl-base \
+	bison \
+	libgcrypt20-dev \
+    libpcap-dev \
+    libgpgme-dev \
+    libksba-dev \
+	nmap \
+	libjson-glib-dev \
+	python3-impacket \
+	libsnmp-dev \
+	python3-pip \
+    python3-setuptools \
+    python3-packaging \
+    python3-wrapt \
+    python3-cffi \
+    python3-psutil \
+    python3-lxml \
+    python3-defusedxml \
+    python3-paramiko \
+    python3-redis \
+    python3-paho-mqtt \
+	python3-gnupg
 
 RUN pip3 install \
         lxml \
 		python-gvm \
-        gvm-tools \
-        paramiko \
-        defusedxml \
-        redis \
-        psutil \
-		packaging \
-		paho-mqtt \
-		python-gnupg \
-		wheel
+        gvm-tools 
 		
 
 RUN mkdir ${SRC_PATH} -p && \
     cd ${SRC_PATH} && \
-    curl -o gvm-libs.tar.gz -sL https://github.com/greenbone/gvm-libs/archive/${GVM_LIBS_VERSION}.tar.gz && \
-    curl -o openvas.tar.gz -sL https://github.com/greenbone/openvas/archive/${OPENVAS_VERSION}.tar.gz && \
-    curl -o gvmd.tar.gz -sL https://github.com/greenbone/gvmd/archive/${GVMD_VERSION}.tar.gz && \
-    curl -o openvas-smb.tar.gz -sL https://github.com/greenbone/openvas-smb/archive/${OPENVAS_SMB_VERSION}.tar.gz && \
-    curl -o ospd-openvas.tar.gz -sL https://github.com/greenbone/ospd-openvas/archive/${OSPD_OPENVAS_VERSION}.tar.gz && \
-    curl -o ospd.tar.gz -sL https://github.com/greenbone/ospd/archive/${OSPD_VERSION}.tar.gz && \
+    curl -o gvm-libs.tar.gz -sL https://github.com/greenbone/gvm-libs/archive/refs/tags/v${GVM_LIBS_VERSION}.tar.gz && \
+    curl -o openvas.tar.gz -sL https://github.com/greenbone/openvas/archive/v${OPENVAS_SCANNER_VERSION}.tar.gz && \
+    curl -o gvmd.tar.gz -sL https://github.com/greenbone/gvmd/archive/v${GVMD_VERSION}.tar.gz && \
+    curl -o openvas-smb.tar.gz -sL https://github.com/greenbone/openvas-smb/archive/v${OPENVAS_SMB_VERSION}.tar.gz && \
+    curl -o ospd-openvas.tar.gz -sL https://github.com/greenbone/ospd-openvas/archive/v${OSPD_OPENVAS_VERSION}.tar.gz && \
+	curl -o pg-gvm.tar.gz -sL https://github.com/greenbone/pg-gvm/archive/refs/tags/v${PG_GVM_VERSION}.tar.gz && \
+	curl -o notus.tar.gz -sL https://github.com/greenbone/notus-scanner/archive/refs/tags/v{$NOTUS_VERSION}.tar.gz && \
     find . -name \*.gz -exec tar zxvfp {} \;
 
-RUN pip3 install --upgrade psutil==5.5.1 && \
-    cd ${SRC_PATH}/ospd* && \
-    pip3 install .
 
 RUN cd ${SRC_PATH}/ospd-openvas* && \
-    python3 -m pip install . && \
+    python3 -m pip install . --prefix=$INSTALL_PREFIX --no-warn-script-location && \
     rm -rf ${SRC_PATH}/ospd*
-
+	
+RUN cd ${SRC_PATH}/notus* && \
+    python3 -m pip install . --prefix=$INSTALL_PREFIX --no-warn-script-location && \
+    rm -rf ${SRC_PATH}/notus*
+	
 RUN cd ${SRC_PATH}/gvm-libs* && \
     mkdir build && \
     cd build && \
-    cmake .. && \
+    cmake .. 	\
+	-DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSYSCONFDIR=/etc \
+    -DLOCALSTATEDIR=/var && \
     make && \
     make install && \
     rm -rf ${SRC_PATH}/gvm-libs*
@@ -69,7 +133,9 @@ RUN cd ${SRC_PATH}/gvm-libs* && \
 RUN cd ${SRC_PATH}/openvas-smb* && \
     mkdir build && \
     cd build && \
-    cmake .. && \
+    cmake ..  \
+	-DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
+    -DCMAKE_BUILD_TYPE=Release && \
     make && \
     make install && \
     rm -rf ${SRC_PATH}/openvas-smb*
@@ -77,13 +143,20 @@ RUN cd ${SRC_PATH}/openvas-smb* && \
 RUN cd ${SRC_PATH}/openvas* && \
     mkdir build && \
     cd build && \
-    cmake .. && \
-    make && \
+    cmake .. \
+	-DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSYSCONFDIR=/etc \
+    -DLOCALSTATEDIR=/var \
+    -DOPENVAS_FEED_LOCK_PATH=/var/lib/openvas/feed-update.lock \
+    -DOPENVAS_RUN_DIR=/run/ospd && \
+    make -j$(nproc) && \
     make install && \
     rm -rf ${SRC_PATH}/openvas*
 
 COPY --from=0 /var/lib/openvas/plugins /var/lib/openvas/plugins
-COPY configs/redis.conf /etc/redis/redis.conf
+COPY configs/redis-openvas.conf /etc/redis/redis.conf
+COPY configs/openvas.conf /etc/openvas/openvas.conf
 COPY scripts/sync-nvts /usr/local/bin/sync-nvts
 COPY scripts/greenbone-nvt-sync /usr/local/bin/greenbone-nvt-sync
 
@@ -92,7 +165,8 @@ RUN adduser service --gecos "service,service,service,service" --disabled-passwor
 	
 COPY scripts/sync-nvts /usr/local/bin/sync-nvts
 
-RUN redis-server /etc/redis/redis.conf && \
+RUN chown redis:redis /etc/redis/redis.conf &&\
+    redis-server /etc/redis/redis.conf && \
     chmod +x /usr/local/bin/greenbone-nvt-sync && \
     chmod +x /usr/local/bin/sync-nvts && \
     ldconfig && \
@@ -102,10 +176,29 @@ RUN redis-server /etc/redis/redis.conf && \
 RUN cd ${SRC_PATH}/gvmd-* && \
     mkdir build && \
     cd build && \
-    cmake .. && \
-    make && \
+    cmake ..  \ 
+	-DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLOCALSTATEDIR=/var \
+    -DSYSCONFDIR=/etc \
+    -DGVM_DATA_DIR=/var \
+    -DGVMD_RUN_DIR=/run/gvmd \
+    -DOPENVAS_DEFAULT_SOCKET=/run/ospd/ospd-openvas.sock \
+    -DGVM_FEED_LOCK_PATH=/var/lib/gvm/feed-update.lock \
+    -DSYSTEMD_SERVICE_DIR=/lib/systemd/system \
+    -DLOGROTATE_DIR=/etc/logrotate.d && \
+    make -j$(nproc) && \
     make install && \
     rm -rf ${SRC_PATH}/gvmd-*
+	
+RUN cd ${SRC_PATH}/pg-gvm* && \
+    mkdir build && \
+    cd build && \
+    cmake ..  \
+	-DCMAKE_BUILD_TYPE=Release && \
+    make -j$(nproc) && \
+    make install && \
+    rm -rf ${SRC_PATH}/pg-gvm*
 
 COPY --from=0 /var/lib/gvm/scap-data /var/lib/gvm/scap-data
 COPY --from=0 /var/lib/gvm/cert-data /var/lib/gvm/cert-data
@@ -131,13 +224,6 @@ RUN chmod +x /usr/local/sbin/greenbone-certdata-sync && \
     sleep 10 && \
     sync-scap
 
-RUN git clone https://github.com/SecureAuthCorp/impacket.git && \
-    cd impacket/ && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh && chmod +x rustup.sh && ./rustup.sh -y &&\
-	export PATH="$HOME/.cargo/bin:$PATH" && \
-    pip3 install . && \
-    cd ../ && \
-    rm -rf impacket
 
 COPY scripts/start-services /usr/local/bin/start-services
 COPY scripts/start-openvas /usr/local/bin/start-openvas
@@ -145,7 +231,7 @@ COPY scripts/start-scanner /usr/local/bin/start-scanner
 COPY scripts/update-scanner /usr/local/bin/update-scanner
 COPY scripts/configure-scanner /configure-scanner
 COPY scripts/scan.py /scan.py
-COPY configs/openvas.conf /etc/openvas/openvas.conf
+
 
 RUN mkdir reports && \
     chmod 777 reports && \
@@ -160,7 +246,6 @@ RUN mkdir reports && \
     echo "net.core.somaxconn = 1024"  >> /etc/sysctl.conf && \
     echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
 	
-
 RUN bash /configure-scanner && \
     rm -f /configure-scanner && \
     rm -rf /usr/local/var/log/gvm/*.log && \

@@ -12,14 +12,14 @@ echo "Plugins pushed to Redis."
 echo "Starting OSPD..."
 ospd-openvas --log-file=/var/log/gvm/ospd.log \
     --log-level=DEBUG \
-    --unix-socket=/var/run/ospd/ospd.sock \
-    --pid-file=/var/run/ospd/ospd.pid \
+    --unix-socket=/run/ospd/ospd-openvas.sock
+    --pid-file=/run/ospd/ospd-openvas.pid \
     --lock-file-dir=/var/run/ospd &
 echo "OSPD ready."
 
 echo "Waiting for OSPD socket..."
 sleep 5
-while [ ! -e /var/run/ospd/ospd.sock ]; do
+while [ ! -e /run/ospd/ospd-openvas.sock ]; do
   sleep 1
 done
 echo "OSPD socket ready."
@@ -34,7 +34,7 @@ echo "OSPD released lock"
 
 echo "Starting GVMD..."
 gvmd --listen-group=service --listen-owner=service \
-     --osp-vt-update=/var/run/ospd/ospd.sock
+     --osp-vt-update=/run/ospd/ospd-openvas.sock
 echo "Testing GVMD status..."
 sleep 5
 X="$(ps -aux | grep -v grep | grep 'gvmd: Waiting')"

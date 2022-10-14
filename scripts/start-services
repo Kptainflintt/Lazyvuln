@@ -9,7 +9,7 @@ rm -f /usr/local/var/run/gvm* /var/run/ospd/ospd.sock /var/run/ospd/ospd.pid
 echo "Existing processes killed..."
 
 echo "Starting Redis server..."
-redis-server /etc/redis/redis.conf
+redis-server --daemonize yes
 echo "Testing Redis status..."
 sleep 1
 X="$(redis-cli ping)"
@@ -30,3 +30,7 @@ while  [ "${#X}" != 0 ]; do
   X="$(ps -aux | grep -v grep | grep 'postgres: 11/main: startup')"
 done
 echo "PostgreSQL ready."
+
+echo "Starting Mosquitto"
+systemctl start mosquitto.service
+echo"Mosquitto Ready"

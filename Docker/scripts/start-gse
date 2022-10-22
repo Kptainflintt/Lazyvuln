@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+echo "Pushing plugins to Redis..."
+openvas -u
+sleep 5
+X="$(ps -aux | grep -v grep | grep 'openvas: Reloaded')"
+while  [ "${#X}" != 0 ]; do
+    sleep 1
+    X="$(ps -aux | grep -v grep | grep 'openvas: Reloaded')"
+done
+echo "Plugins pushed to Redis."
+
+echo "Starting OSPD..."
+ospd-openvas --unix-socket /run/ospd/ospd-openvas.sock \
+     --pid-file /run/ospd/ospd-openvas.pid \
+	 --log-file /var/log/gvm/ospd-openvas.log \
+	 --lock-file-dir /var/run/ospd \
+	 --socket-mode 0o770 \
+         --log-level DEBUG \
+	 --mqtt-broker-address localhost \
+	 --mqtt-broker-port 1883 \
+	 --notus-feed-dir /var/lib/notus/advisories &
+echo "OSPD ready."
+
+echo "Waiting for OSPD socket..."
+sleep 5
+while [ ! -e /run/ospd/ospd-openvas.sock ]; do
+  sleep 1
+done
+echo "OSPD socket ready."
+
+echo "Waiting for OSPD lock file release..."
+X=$(grep -q "Removed lock from file /var/run/ospd/feed-update.lock" /var/log/gvm/ospd-openvas.log)$?
+while [ $X -ne 0 ]; do
+  sleep 1
+  X=$(grep -q "Removed lock from file /var/run/ospd/feed-update.lock" /var/log/gvm/ospd-openvas.log)$?
+done
+echo "OSPD released lock"
+
+echo "Starting Notus-scanner..."
+notus-scanner --log-file /var/log/gvm/notus.log \
+    --log-level DEBUG \
+	--mqtt-broker-address localhost \
+	--mqtt-broker-port 1883 \
+	--pid-file /run/notus-scanner/notus-scanner.pid \
+	--products-directory  /var/run/openvas/plugins/notus/products &\
+echo "Notus Started"
+
+echo "Starting GVMD..."
+gvmd --listen-group=service --listen-owner=service \
+     --osp-vt-update=/run/ospd/ospd-openvas.sock
+sleep 15

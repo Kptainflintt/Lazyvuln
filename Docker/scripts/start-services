@@ -1,0 +1,36 @@
+#!/bin/bash
+echo "Killing existing processes..."
+ps -ef | grep 'gvmd' | grep -v grep | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+ps -ef | grep 'ospd-openvas' | grep -v grep | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+ps -ef | grep 'postgres' | grep -v grep | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+ps -ef | grep 'redis' | grep -v grep | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+sleep 1
+rm -f /run/feed-update.lock /var/run/gvmd/gvmd.* /var/run/ospd/ospd-openvas.sock /run/ospd/ospd-openvas.pid
+echo "Existing processes killed..."
+
+echo "Starting Redis server..."
+redis-server /etc/redis/redis.conf
+echo "Testing Redis status..."
+sleep 1
+X="$(redis-cli -s /run/redis-openvas/redis.sock ping)"
+while  [ "${X}" != "PONG" ]
+do
+  sleep 1
+  X="$(redis-cli -s /run/redis-openvas/redis.sock ping)"
+done
+echo "Redis ready."
+
+echo "Starting PostgreSQL..."
+sudo pg_ctlcluster 13 main start
+echo "Testing PostgreSQL status..."
+sleep 1
+X="$(ps -aux | grep -v grep | grep 'postgres: 13/main: startup')"
+while  [ "${#X}" != 0 ]; do
+  sleep 1
+  X="$(ps -aux | grep -v grep | grep 'postgres: 13/main: startup')"
+done
+echo "PostgreSQL ready."
+
+echo "Starting Mosquitto"
+/etc/init.d/mosquitto start
+echo "Mosquitto Ready"

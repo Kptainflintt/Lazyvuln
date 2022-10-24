@@ -4,7 +4,7 @@
 apt-get update && apt-get upgrade -y
 
 #Installing required components
-apt-get docker.io git nmap net-tools -y
+apt-get install docker.io git nmap net-tools -y
 
 #Installing Docker-compose
 wget https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-linux-x86_64

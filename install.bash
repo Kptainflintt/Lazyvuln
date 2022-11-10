@@ -21,12 +21,13 @@ docker-compose up &> faraday.txt &
 sleep 20
 echo "Done..."
 docker container prune -f
+faraday_pass=$(cat faraday.txt | grep "Admin user" | cut -d " " -f 13)
 
 #downloading scan script
 wget https://raw.githubusercontent.com/Kptainflintt/Lazyvuln/master/start-scan
 chmod +x start-scan
 cp start-scan /usr/bin
-
+sed -i s/"faraday -p Fireport!"/"faraday -p $faraday_pass"/g /usr/bin/start-scan
 
 #Cleaning 
 rm docker-compose

@@ -35,7 +35,7 @@ rm start-scan
 echo "Done, you can run scans! Just execute "start-scan" "
 
 #Personalize
-read -p 'Would you like to perform scheduled scans? (y/n) ' schedule
+read -p "Would you like to perform scheduled scans? (y/n) " schedule
 
 if [ "$schedule" = "y"]
 	then

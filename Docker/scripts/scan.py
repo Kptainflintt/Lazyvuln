@@ -14,7 +14,7 @@ from typing import List
 from typing import Set
 from typing import IO
 
-DEBUG: bool = True
+DEBUG: bool = False
 
 scan_profiles: Dict[str, str] = {
     "Base": "d21f6c81-2b88-4ac1-b7b4-a2a9f2ad4663",

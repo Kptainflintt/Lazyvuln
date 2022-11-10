@@ -18,7 +18,7 @@ docker pull kptainflintt/lazyvuln
 wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.yaml
 echo "Building Faraday Stack (it can take some time...)"
 docker-compose up &> faraday.txt &
-sleep 40
+sleep 30
 echo "Done..."
 docker container prune -f
 
@@ -26,8 +26,7 @@ docker container prune -f
 wget https://raw.githubusercontent.com/Kptainflintt/Lazyvuln/master/start-scan
 chmod +x start-scan
 cp start-scan /usr/bin
-faraday_pass=$(cat faraday.txt | grep "Admin user" | cut -d " " -f 13)
-sed -i s/"Fireport!"/"\"${faraday_pass//&/\\&}\""/g /usr/bin/start-scan
+
 
 #Cleaning 
 rm docker-compose
@@ -56,6 +55,8 @@ if [ "$schedule" = "y" ]
 				cp /usr/bin/start-scan /etc/cron.monthly/start-scan
 		fi
 fi
+faraday_pass=$(cat faraday.txt | grep "Admin user" | cut -d " " -f 13)
+sed -i s/"Fireport!"/"\"${faraday_pass//&/\\&}\""/g /usr/bin/start-scan
 echo "Here is our Fraday's password, keep it!!"
 echo -e "\033[0;31m $faraday_pass \033[0m"
 echo "You're done, have nice scans ;) "

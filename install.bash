@@ -15,7 +15,10 @@ chmod +x /bin/docker-compose
 #Pulling and compose required containers 
 docker pull kptainflintt/lazyvuln
 wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.yaml
-docker-compose up &> faraday.txt 
+echo "Building Faraday Stack (it can take some time...)"
+docker-compose up &> faraday.txt &
+sleep 20
+echo "Done..."
 docker kill $(docker ps -q)
 docker container prune -f
 

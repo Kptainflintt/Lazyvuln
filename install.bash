@@ -57,5 +57,5 @@ if [ "$schedule" = "y"]
 		fi
 fi
 echo "Here is our Fraday's password, keep it!!"
-echo -e "'\033[0;31m'$faraday_pass'\033[0m'"
+echo -e "'\033[0;31m$faraday_pass\033[0m'"
 echo "You're done, have nice scans ;) "

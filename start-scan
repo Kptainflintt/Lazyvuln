@@ -1,0 +1,16 @@
+#!/bin/bash
+echo "Determining subnet..."
+ip_addr=$(/sbin/ifconfig enp3s0 | grep "inet " | awk '{print $2}')
+ip_subnet=$(echo $ip_addr | cut -d'.' -f1,2,3)
+ip_subnet+=".0/24"
+echo "Done. Subnet found is '$ip_subnet'"
+echo "Define targets..."
+targets=$(nmap -n -sn $ip_subnet  -oG - | awk '/Up$/{print $2}' | paste -sd ",")
+targetsnbr=$(nmap -n -sn $ip_subnet  -oG - | wc -l)
+echo "Done. Found '$targetnbr' targets"
+echo "Run vulnerability scan..."
+docker run --rm -v $(pwd):/reports/:rw kptainflintt python3 -u scan.py $targets --update -o scan_$(date -I).xml -f XML -t "Consider Alive"
+echo "Vulnerability scan done. XML report wrote, sending to Faraday"
+sleep 5
+faraday-cli auth -f http://localhost:5985 -u faraday -p Fireport! && faraday-cli workspace create scan_$(date -I) && faraday-cli tool report ./scan_$(date -I).xml
+echo "Done. You ara able to find your new workspace on Faraday WebUI"

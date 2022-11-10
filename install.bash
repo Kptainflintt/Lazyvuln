@@ -47,13 +47,13 @@ if [ "$schedule" = "y" ]
 		
 		if [ "$cron" = 1 ]
 			then
-				cp start-scan /etc/cron.daily/start-scan
+				cp /usr/bin/start-scan /etc/cron.daily/start-scan
 		elif [ "$cron"= 2 ]
 			then 
-				cp start-scan /etc/cron.weekly/start-scan
+				cp /usr/bin/start-scan /etc/cron.weekly/start-scan
 		elif [ "$cron"= 3 ]
 			then 
-				cp start-scan /etc/cron.monthly/start-scan
+				cp /usr/bin/start-scan /etc/cron.monthly/start-scan
 		fi
 fi
 echo "Here is our Fraday's password, keep it!!"

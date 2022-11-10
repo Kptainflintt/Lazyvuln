@@ -1,46 +1,75 @@
-Work in progress, will be published soon
-<!-- # Greenbone GVM core 
 
-Automated scan engine with Greenbone (formerly OpenVAS), Faraday and docker.
 
-Components for working : 
+## Automated scan engine with Greenbone (formerly OpenVAS), Faraday and docker.
 
-- Faraday-server
-- faraday-cli
-- docker image of GVM core (with no webUI)
+Components : 
+
+- Faraday-server : Faraday is a wonderful IPE (Integrated Penetration-Test Environnement) wich can parse and visaulize Grennbone's results in a beautiful dashboard.
+- faraday-cli : Faraday's command-line interface
+- docker image of GVM core (with no webUI) : build from source, pulled from Docker hub
 - bash script 
 
-## Steps
+Fully fonctionnal on a Debian host, feel free to tell if it's not working on other distrib.
 
-### 1. Install Faraday
+I've created nothing, just compiling, all credits are listed at the end of this readme.
 
-Faraday is a wonderful IPE (Integrated Penetration-Test Environnement) wich can parse and visaulize Grennbone's results in a beautiful dashboard.
-Let's install it following infobytes's steps on [Infobyte repository](https://github.com/infobyte/faraday)
-Don't forget to install [farady-cli](https://github.com/infobyte/faraday-cli)
+## How does it work?
 
-### 2. Pull image:
+This tool get your ip address from NIC and do a nmap ARP scan to get alive hosts on network.
+The scan results are pulled in a text file, this file is given to Greenbone container in order to run a vulnerability scan only on alive hosts.
+Then, theXML file is generated and send to Faraday, thanks to faraday-cli.
+
+When finished, the results of the scan are visible on the Faraday web page http://<ip>:5985
+
+## Steps to run automatic scans
+
+### 1. Install all components :
+
+First install cURL, then
 
 ```
-docker pull kptainflintt/gvm-core
+curl -L https://raw.githubusercontent.com/Kptainflintt/Lazyvuln/master/install.bash | bash
+
 ```
 
-### 3. Download script
+When installing, script will ask you for scheduled scan if you want. It's just a cron job, executed daily, weekly or monthly. You can also create your own cron job later (for help, you can use https://crontab.guru/)
+This will use my script to launch scan and pull XML results in faraday, with naming it with date (like scan_11-10-2022.xml)
 
-This script is not mandatory, but can automate scan with upload to Faraday-server.
+This script is not mandatory, but can automate scan with upload to Faraday-server.You also can run it manually when you want
+
+ATTENTION : please take care of faraday's password given at the end of the script!!!!
+
+###2. Wait for cron job, or run it manually !
+
+If you want to run a scan, just launch
+
+```
+start-scan
+```
+And wait for it to finish. Duration depends of : 
+
+- Number of targets
+- CPU
+- RAM
+
+So it can take 10 mn or even 10 hours, be patient!
+
+For each scan, the script will create a new panel in Faraday, so you can navigate between your scans.
 
 
-## Usage of docker image to run one-shot scan (Thanks to thedoctor0, copied from his repo)
+## Usage of docker image to run manual one-shot scan (Thanks to thedoctor0, copied from his repo)
 
 ### Scan and save report:
 
 ```
-docker run --rm -v $(pwd):/reports/:rw kptainflintt/gvm-core python3 -u scan.py <target> [options]
+docker run --rm -v $(pwd):/reports/:rw kptainflintt/lazyvuln python3 -u scan.py <target> [options]
 ```
 
-This will start up the container and update the NVTs cache - it can take some time, so be patient.
+This will start up the container (optionnaly pull it) and update the NVTs cache - it can take some time, so be patient.
 
 After that, the scan script will run and the progress will be displayed in the console.
 
+### Customizations
 
 #### Target
 
@@ -146,4 +175,8 @@ Feeds update is quite slow, so it will take significantly more time.
 - Mike Splain for creating the original OpenVAS docker image
 - ICTU team for creating the base automation script for OpenVAS
 - Eugene Merlinsky for adjusting the project to work with Greenbone 20.8.0
---!>
+- thedoctor0 for his great job
+- lukewegryn fir the automation script
+- Faraday's team
+- Greenbone's team
+

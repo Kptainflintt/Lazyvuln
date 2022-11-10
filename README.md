@@ -25,10 +25,12 @@ When finished, the results of the scan are visible on the Faraday web page http:
 
 ### 1. Install all components :
 
-First install cURL, then
+Download and execute install file 
 
 ```
-curl -L https://raw.githubusercontent.com/Kptainflintt/Lazyvuln/master/install.bash | bash
+wget https://raw.githubusercontent.com/Kptainflintt/Lazyvuln/master/install.bash
+chmod +x install.bash
+./install.bash
 
 ```
 

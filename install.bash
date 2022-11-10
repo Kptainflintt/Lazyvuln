@@ -20,7 +20,6 @@ echo "Building Faraday Stack (it can take some time...)"
 docker-compose up &> faraday.txt &
 sleep 20
 echo "Done..."
-docker kill $(docker ps -q)
 docker container prune -f
 
 #downloading scan script
@@ -30,7 +29,7 @@ cp start-scan /usr/bin
 
 
 #Cleaning 
-rm docker-compose*
+rm docker-compose
 rm start-scan
 echo "Done, you can run scans! Just execute "start-scan" "
 

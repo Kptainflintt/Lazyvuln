@@ -13,7 +13,7 @@ targets=$(nmap -n -sn $ip_subnet  -oG - | awk '/Up$/{print $2}' | paste -sd ",")
 targetsnbr=$(nmap -n -sn $ip_subnet  -oG - | wc -l)
 echo -e "${GREEN}Done. Found '$targetnbr' targets${NC}"
 echo -e "${GREEN}Run vulnerability scan...${NC}"
-docker run --rm -v $(pwd):/reports/:rw kptainflintt python3 -u scan.py $targets --update -o scan_$(date -I).xml -f XML -t "Consider Alive"
+docker run --rm -v $(pwd):/reports/:rw kptainflintt/lazyvuln python3 -u scan.py $targets --update -o scan_$(date -I).xml -f XML -t "Consider Alive"
 echo -e "${GREEN}Vulnerability scan done. XML report wrote, sending to Faraday${NC}"
 sleep 5
 faraday-cli auth -f http://localhost:5985 -u faraday -p Fireport! && faraday-cli workspace create scan_$(date -I) && faraday-cli tool report ./scan_$(date -I).xml

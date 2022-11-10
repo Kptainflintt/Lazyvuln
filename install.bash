@@ -18,7 +18,7 @@ docker pull kptainflintt/lazyvuln
 wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.yaml
 echo "Building Faraday Stack (it can take some time...)"
 docker-compose up &> faraday.txt &
-sleep 30
+sleep 40
 echo "Done..."
 docker container prune -f
 

@@ -4,7 +4,7 @@
 apt-get update && apt-get upgrade -y
 
 #Installing required components
-apt-get install docker.io git nmap net-tools python-pip -y
+apt-get install docker.io git nmap net-tools python3-pip -y
 pip install faraday-cli
 
 #Installing Docker-compose
@@ -19,7 +19,6 @@ wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.ya
 echo "Building Faraday Stack (it can take some time...)"
 docker-compose up &> faraday.txt 
 echo "Done..."
-cat faraday.txt | grep "Admin user" | cut -d " " 
 docker kill $(docker ps -q)
 docker container prune -f
 
@@ -55,5 +54,5 @@ if [ "$schedule" = "y"]
 			then 
 				cp start-scan /etc/cron.monthly/start-scan
 		fi
-		
+cat faraday.txt | grep --color=always "Admin user"
 echo "You're done, have nice scans ;) "

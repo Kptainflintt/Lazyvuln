@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GREEN='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 iname=$(ip -o link show | sed -rn '/^[0-9]+: en/{s/.: ([^:]*):.*/\1/p}')
 echo -e "${GREEN}Determining subnet...${NC}"

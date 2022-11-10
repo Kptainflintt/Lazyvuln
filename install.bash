@@ -55,5 +55,6 @@ if [ "$schedule" = "y"]
 			then 
 				cp start-scan /etc/cron.monthly/start-scan
 		fi
-cat faraday.txt | grep --color=always "Admin user"
+echo "Here is our Fraday's password, keep it!!"
+echo -e "'\033[0;31m'$faraday_pass'\033[0m'"
 echo "You're done, have nice scans ;) "

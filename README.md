@@ -39,7 +39,19 @@ This script is not mandatory, but can automate scan with upload to Faraday-serve
 
 ATTENTION : please take care of faraday's password given at the end of the script!!!!
 
-###2. Wait for cron job, or run it manually !
+If you want to be notified when scan finished, you can use ssmtp and mailutils, just :
+
+```
+apt install ssmtp mailutils -y
+```
+
+Copy ssmtp.conf in this repo and change values to your own, copy it to /etc/ssmtp and add to /usr/bin/start-scan, at the end :
+
+```
+echo "The scan ended successfully, you should be able to see results on your faraday webui" | mail -s "Scan ended" *your_email_here*
+```
+
+### 2. Wait for cron job, or run it manually !
 
 If you want to run a scan, just launch
 

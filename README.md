@@ -171,6 +171,38 @@ This will synchronize OpenVAS feeds before making the scan.
 
 Feeds update is quite slow, so it will take significantly more time.
 
+### Send to Faraday container
+
+First, if you not use install script, you have to compose faraday's container
+
+```
+wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.yaml
+docker-compose up
+```
+Credentials will be in screen output, take care of it!
+
+Then, install faraday-cli :
+
+```
+pip install faraday-cli
+```
+
+You can now open a session in faraday 
+
+```
+faraday-cli auth -f http://localhost:5985 -u faraday -p *your password*
+```
+Create a workspace : 
+```
+faraday-cli workspace create *name of your workspace*
+```
+
+And, finally, send XML to it:
+```
+faraday-cli tool report *path-to-your-scan-result*
+```
+More informations : https://docs.faraday-cli.faradaysec.com/
+
 ## Credits
 - Mike Splain for creating the original OpenVAS docker image
 - ICTU team for creating the base automation script for OpenVAS

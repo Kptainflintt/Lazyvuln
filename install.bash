@@ -15,11 +15,11 @@ chmod +x /bin/docker-compose
 #Pulling and compose required containers 
 docker pull kptainflintt/lazyvuln
 wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.yaml
-docker-compose up &> faraday.txt &
+docker-compose up &> faraday.txt 
 docker kill $(docker ps -q)
 docker container prune -f
 
 #Cleaning 
-rm docker-compose-linux-x86_64
+rm docker-compose
 echo "Done, you can run scans!"
 

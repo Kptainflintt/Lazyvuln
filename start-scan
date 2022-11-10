@@ -2,9 +2,9 @@
 
 GREEN='\033[0;31m'
 NC='\033[0m'
-
+iname=$(ip -o link show | sed -rn '/^[0-9]+: en/{s/.: ([^:]*):.*/\1/p}')
 echo -e "${GREEN}Determining subnet...${NC}"
-ip_addr=$(/sbin/ifconfig enp3s0 | grep "inet " | awk '{print $2}')
+ip_addr=$(/sbin/ifconfig "$iname" | grep "inet " | awk '{print $2}')
 ip_subnet=$(echo $ip_addr | cut -d'.' -f1,2,3)
 ip_subnet+=".0/24"
 echo -e "${GREEN}Done. Subnet found is '$ip_subnet'${NC}"

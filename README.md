@@ -70,6 +70,28 @@ So it can take 10 mn or even 10 hours, be patient!
 
 For each scan, the script will create a new panel in Faraday, so you can navigate between your scans.
 
+WARNING : I have some issues with faraday's password sometimes. If specials characters like "(" are generated, authentication withfaraday-cli can fail.
+I you're facing this issue, do the following to change faraday's password (or if you want to change it) : 
+
+1. Get container ID :
+
+```
+root@debian:~# docker ps
+CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                                            NAMES
+8db8c51c1826   faradaysec/faraday     "/entrypoint.sh"         29 minutes ago   Up 29 minutes   0.0.0.0:5985->5985/tcp, 0.0.0.0:9000->9000/tcp   faraday_app
+4a0cb600a2ff   postgres:12.7-alpine   "docker-entrypoint.s…"   29 minutes ago   Up 29 minutes   0.0.0.0:49154->5432/tcp                          faraday_db
+b9e7ab58287e   redis:6.2-alpine       "docker-entrypoint.s…"   29 minutes ago   Up 29 minutes   0.0.0.0:49153->6379/tcp                         faraday_redis
+```
+For me, it's 8db8c51c1826, so : 
+
+```
+docker exec -it 8db8c51c1826 bash
+```
+Then : 
+
+```
+faraday-manage change-password
+```
 
 ## Usage of docker image to run manual one-shot scan (Thanks to thedoctor0, copied from his repo)
 

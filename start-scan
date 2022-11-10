@@ -11,7 +11,7 @@ echo -e "${GREEN}Done. Subnet found is '$ip_subnet'${NC}"
 echo -e "${GREEN}Define targets...${NC}"
 targets=$(nmap -n -sn $ip_subnet  -oG - | awk '/Up$/{print $2}' | paste -sd ",")
 targetsnbr=$(echo $targets |grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+" | wc -l)
-echo -e "${GREEN}Done. Found '$targetnbr' targets${NC}"
+echo -e "${GREEN}Done. Found '$targetsnbr' targets${NC}"
 echo -e "${GREEN}Run vulnerability scan...${NC}"
 docker run --rm -v $(pwd):/reports/:rw kptainflintt/lazyvuln python3 -u scan.py $targets --update -o scan_$(date -I).xml -f XML -t "Consider Alive"
 echo -e "${GREEN}Vulnerability scan done. XML report wrote, sending to Faraday${NC}"

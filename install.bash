@@ -32,7 +32,7 @@ sed -i s/"faraday -p Fireport!"/"faraday -p $faraday_pass"/g /usr/bin/start-scan
 #Cleaning 
 rm docker-compose
 rm start-scan
-echo "Done, you can run scans! Just execute "start-scan" "
+echo "Done, you can run scans! Just execute start-scan "
 
 #Personalize
 read -p "Would you like to perform scheduled scans? (y/n) " schedule

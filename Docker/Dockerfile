@@ -1,104 +1,101 @@
-FROM debian:bullseye
+FROM debian:stable-slim
 
 ENV GVM_VERSION=22.4.0 \
-    GVM_LIBS_VERSION=22.4.0 \
-    GVMD_VERSION=22.4.0 \
+    GVM_LIBS_VERSION=22.4.2 \
+    GVMD_VERSION=22.4.2 \
     PG_GVM_VERSION=22.4.0 \
     OPENVAS_SMB_VERSION=22.4.0 \
-    OPENVAS_SCANNER_VERSION=22.4.0 \
-    OSPD_OPENVAS_VERSION=22.4.2 \
-    NOTUS_VERSION=22.4.1 \
+    OPENVAS_SCANNER_VERSION=22.4.1 \
+    OSPD_OPENVAS_VERSION=22.4.5 \
+    NOTUS_VERSION=22.4.2 \
     SRC_PATH='/src' \
     PATH="${PATH}:/usr/local/sbin" \
     INSTALL_PREFIX=/usr/local \
     DEBIAN_FRONTEND=noninteractive \
     TERM=dumb
 
-RUN apt-get update && apt-get install --no-install-recommends --assume-yes \
-    build-essential \
-    curl \
-    cmake \
-    sudo \
-    pkg-config \
-    python3 \
-    python3-pip \
-    gnupg \
-    texlive-latex-extra \
-    texlive-fonts-recommended \
-    xmlstarlet \
-    zip \
-    rpm \
-    fakeroot \
-    dpkg \
-    nsis \
-    gnupg \
-    gpgsm \
-    wget \
-    sshpass \
-    openssh-client \
-    socat \
-    snmp \
-    python3 \
-    smbclient \
-    python3-lxml \
-    gnutls-bin \
-    xml-twig-tools \
-    redis-server \
-    mosquitto
-	
-RUN apt-get install -y \
-    libglib2.0-dev \
-    libgpgme-dev \
-    libgnutls28-dev \
-    uuid-dev \
-    libssh-gcrypt-dev \
-    libhiredis-dev \
-    libxml2-dev \
-    libpcap-dev \
-    libnet1-dev \
-    libpaho-mqtt-dev \
-    libldap2-dev \
-    libradcli-dev \
-    libpq-dev \
-    libical-dev \
-    xsltproc \
-    rsync \
-    libbsd-dev \
-    gcc-mingw-w64 \
-    libpopt-dev \
-    libunistring-dev \
-    heimdal-dev \
-    perl-base \
-    bison \
-    libgcrypt20-dev \
-    libpcap-dev \
-    libgpgme-dev \
-    libksba-dev \
-    nmap \
-    libjson-glib-dev \
-    python3-impacket \
-    libsnmp-dev \
-    python3-pip \
-    python3-setuptools \
-    python3-packaging \
-    python3-wrapt \
-    python3-cffi \
-    python3-psutil \
-    python3-lxml \
-    python3-defusedxml \
-    python3-paramiko \
-    python3-redis \
-    python3-paho-mqtt \
-    python3-gnupg
+RUN   apt-get update && apt-get install --no-install-recommends --assume-yes \
+  build-essential \
+  curl \
+  cmake \
+  pkg-config \
+  python3 \
+  python3-pip \
+  gnupg \
+  libglib2.0-dev \
+  libgpgme-dev \
+  libgnutls28-dev \
+  uuid-dev \
+  libssh-gcrypt-dev \
+  libhiredis-dev \
+  libxml2-dev \
+  libpcap-dev \
+  libnet1-dev \
+  libpaho-mqtt-dev  \
+  libldap2-dev \
+  libradcli-dev \
+  libpq-dev \
+  postgresql-server-dev-13 \
+  postgresql-13 \
+  postgresql-contrib-13 \
+  libical-dev \
+  xsltproc \
+  rsync \
+  libbsd-dev \
+  texlive-latex-extra \
+  texlive-fonts-recommended \
+  xmlstarlet \
+  zip \
+  rpm \
+  fakeroot \
+  dpkg \
+  nsis \
+  gpgsm \
+  wget \
+  sshpass \
+  openssh-client \
+  socat \
+  snmp \
+  smbclient \
+  python3-lxml \
+  gnutls-bin \
+  xml-twig-tools \
+  gcc-mingw-w64 \
+  libpopt-dev \
+  libunistring-dev \
+  heimdal-dev \
+  perl-base \
+  bison \
+  libgcrypt20-dev \
+  libksba-dev \
+  nmap \
+  libjson-glib-dev \
+  python3-impacket \
+  libsnmp-dev \
+  python3-setuptools \
+  python3-packaging \
+  python3-wrapt \
+  python3-cffi \
+  python3-psutil \
+  python3-defusedxml \
+  python3-paramiko \
+  python3-redis \
+  python3-paho-mqtt \
+  python3-setuptools \
+  python3-paho-mqtt \
+  python3-psutil \
+  python3-gnupg \
+  python3-setuptools \
+  python3-packaging \
+  python3-defusedxml \
+  redis-server \
+  sudo  \
+  mosquitto && \
+  rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install \
-    lxml \
     python-gvm \
     gvm-tools 
-		
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" >     /etc/apt/sources.list.d/pgdg.list && \
-    curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc > /dev/null && \
-    apt update && apt install postgresql-13 postgresql-contrib-13 postgresql-server-dev-13 -y
 
 RUN mkdir ${SRC_PATH} -p && \
     cd ${SRC_PATH} && \
@@ -263,6 +260,7 @@ RUN bash /configure-scanner && \
     rm -f /configure-scanner && \
     rm -rf /var/log/gvm/*.log && \
     rm -rf  /var/run/feed-update.lock && \
+    rm -rf /src/* && \
     /etc/init.d/postgresql stop && \
     /etc/init.d/redis-server stop && \ 
     chmod 777 /var/lib/gvm/gvmd/report_formats

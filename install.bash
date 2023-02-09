@@ -50,7 +50,7 @@ echo "Done, you can run scans! Just execute "start-scan" "
 #Personalize
 read -p "Would you like to perform scheduled scans? (y/n) " schedule
 
-if [ "$schedule" = "y"]
+if [ "$schedule" = "y" ]
 	then
 		echo "How often?"
 		echo "1. Every day"

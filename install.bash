@@ -39,7 +39,7 @@ read -p "What type of interface should I look for ?" inet
 
 if [ $inet = "2" ]
 	then
-		sed -i s/en/eth/g /usr/binstart-scan
+		sed -i s/en/eth/g /usr/bin/start-scan
 elif [ $inet = "3" ]
 	then 
 		sed -i s/en/wl/g /usr/bin/start-scan

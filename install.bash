@@ -33,7 +33,7 @@ chmod +x start-scan
 cp start-scan /usr/bin
 
 #Select right interface
-echo -e " 1.eno, enp \n 2. eth \n 3. wl"
+echo -e " 1.eno, enp, ens \n 2. eth \n 3. wl"
 
 read -p "What type of interface should I look for ?" inet
 

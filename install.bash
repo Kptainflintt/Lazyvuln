@@ -21,7 +21,7 @@ docker-compose up &> faraday.txt &
 X=$(grep -q "Faraday server is ready" ./faraday.txt)$?
 while [ $X -ne 0 ]; do
   sleep 5
-  X=$(grep -q "Faraday server is ready" /var/log/gvm/gvmd.log)$?
+  X=$(grep -q "Faraday server is ready" ./faraday.txt)$?
 done
 echo "Done..."
 faraday_pass=$(cat faraday.txt | grep "Admin user" | cut -d " " -f 13)

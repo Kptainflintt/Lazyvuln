@@ -16,5 +16,5 @@ echo -e "${GREEN}Run vulnerability scan...${NC}"
 docker run --rm -v $(pwd):/reports/:rw kptainflintt/lazyvuln python3 -u scan.py $targets --update -o scan_$(date -I).xml -f XML -t "Consider Alive"
 echo -e "${GREEN}Vulnerability scan done. XML report wrote, sending to Faraday${NC}"
 sleep 5
-faraday-cli auth -f http://localhost:5985 -u faraday -p Fireport! && faraday-cli workspace create scan_$(date -I) && faraday-cli tool report ./scan_$(date -I).xml
+faraday-cli auth -f http://localhost:5985 -u faraday -p "Fireport!" && faraday-cli workspace create scan_$(date -I) && faraday-cli tool report ./scan_$(date -I).xml
 echo -e "${GREEN}Done. You ara able to find your new workspace on Faraday WebUI${NC}"

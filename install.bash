@@ -24,6 +24,7 @@ while [ $X -ne 0 ]; do
   X=$(grep -q "Faraday Server is ready" ./faraday.txt)$?
 done
 echo "Done..."
+docker builder prune -f
 
 
 #downloading scan script

@@ -21,6 +21,7 @@ docker-compose up &> faraday.txt &
 X=$(grep -q "Faraday Server is ready" ./faraday.txt)$?
 while [ $X -ne 0 ]; do
   sleep 5
+  echo "Still building, be patient..."
   X=$(grep -q "Faraday Server is ready" ./faraday.txt)$?
 done
 echo "Done..."

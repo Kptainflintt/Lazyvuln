@@ -18,10 +18,10 @@ docker pull kptainflintt/lazyvuln
 wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.yaml
 echo "Building Faraday Stack (it can take some time...)"
 docker-compose up &> faraday.txt &
-X=$(grep -q "Faraday server is ready" ./faraday.txt)$?
+X=$(grep -q "Faraday Server is ready" ./faraday.txt)$?
 while [ $X -ne 0 ]; do
   sleep 5
-  X=$(grep -q "Faraday server is ready" ./faraday.txt)$?
+  X=$(grep -q "Faraday Server is ready" ./faraday.txt)$?
 done
 echo "Done..."
 faraday_pass=$(cat faraday.txt | grep "Admin user" | cut -d " " -f 13)

@@ -14,7 +14,7 @@ cp docker-compose /bin/
 chmod +x /bin/docker-compose
 
 #Pulling and compose required containers 
-docker pull kptainflintt/lazyvuln
+docker pull kptainflintt/lazyvuln:latest
 wget https://raw.githubusercontent.com/infobyte/faraday/master/docker-compose.yaml
 echo "Building Faraday Stack (it can take some time...)"
 docker-compose up &> faraday.txt &
@@ -24,7 +24,7 @@ while [ $X -ne 0 ]; do
   X=$(grep -q "Faraday Server is ready" ./faraday.txt)$?
 done
 echo "Done..."
-docker container prune -f
+
 
 #downloading scan script
 wget https://raw.githubusercontent.com/Kptainflintt/Lazyvuln/master/start-scan

@@ -24,13 +24,14 @@ while [ $X -ne 0 ]; do
   X=$(grep -q "Faraday Server is ready" ./faraday.txt)$?
 done
 echo "Done..."
-faraday_pass=$(cat faraday.txt | grep "Admin user" | cut -d " " -f 13)
 docker container prune -f
 
 #downloading scan script
 wget https://raw.githubusercontent.com/Kptainflintt/Lazyvuln/master/start-scan
 chmod +x start-scan
 cp start-scan /usr/bin
+faraday_pass=$(cat faraday.txt | grep "Admin user" | cut -d " " -f 13)
+sed -i s/"Fireport!"/"\"$faraday_pass\""/g /usr/bin/start-scan
 
 #Select right interface
 echo -e " 1.eno, enp, ens \n 2. eth \n 3. wl"
